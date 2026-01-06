@@ -1,0 +1,23 @@
+<h1><%= @place.name %></h1>
+
+<h2>ルール/メモ</h2>
+<p><%= simple_format(@place.description) %></p>
+
+<p>
+  <%= link_to "子Placeを作る", new_place_path(parent_id: @place.id) %> |
+  <%= link_to "このPlaceにItemを追加", new_place_item_path(@place) %>
+</p>
+
+<h2>子Places</h2>
+<ul>
+  <% @children.each do |child| %>
+    <li><%= link_to child.name, place_path(child) %></li>
+  <% end %>
+</ul>
+
+<h2>Items</h2>
+<ul>
+  <% @items.each do |item| %>
+    <li><%= item.name %>（<%= item.quantity %>）</li>
+  <% end %>
+</ul>

@@ -1,0 +1,25 @@
+<h1>Item追加（<%= @place.name %>）</h1>
+
+<%= form_with model: @item, url: place_items_path(@place) do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :quantity %>
+    <%= f.number_field :quantity, min: 1, value: 1 %>
+  </div>
+
+  <div>
+    <%= f.label :note %>
+    <%= f.text_area :note %>
+  </div>
+
+  <div>
+    <%= f.label :status %>
+    <%= f.select :status, Item.statuses.keys %>
+  </div>
+
+  <%= f.submit "追加" %>
+<% end %>
