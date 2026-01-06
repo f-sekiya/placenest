@@ -1,6 +1,6 @@
 class PlacesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_place, only: [:show]
+  before_action :set_place, only: [:show, :destroy]
 
   def index
     @places = current_user.places.roots.order(:id)
@@ -9,6 +9,18 @@ class PlacesController < ApplicationController
   def show
     @children = @place.children.order(:id)
     @items = @place.items.order(:id)
+  end
+
+  def destroy
+    begin
+      if @place.destroy
+        redirect_to places_path, notice: "Placeを削除しました"
+      else
+        redirect_to place_path(@place), alert: @place.errors.full_messages.to_sentence
+      end
+    rescue Ancestry::AncestryException => e
+      redirect_to place_path(@place), alert: e.message
+    end
   end
 
   def new

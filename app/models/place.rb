@@ -1,5 +1,5 @@
 class Place < ApplicationRecord
-  has_ancestry
+  has_ancestry orphan_strategy: :restrict
 
   belongs_to :user
   has_many :items, dependent: :restrict_with_error
