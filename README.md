@@ -1,24 +1,99 @@
-# README
+# placenest
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## アプリケーション名
 
-Things you may want to cover:
+placenest
 
-* Ruby version
+## アプリケーション概要
 
-* System dependencies
+このアプリケーションでできること:
 
-* Configuration
+- 場所（Place）の階層管理（ancestry を利用）
+- 各場所に紐づくアイテム（Item）の登録・編集・一覧表示
 
-* Database creation
+（詳細は後で追記します）
 
-* Database initialization
+## URL
 
-* How to run the test suite
+デプロイ済みの URL をここに記載します（未デプロイの場合は、デプロイ完了後に追記します）。
 
-* Services (job queues, cache servers, search engines, etc.)
+## テスト用アカウント
 
-* Deployment instructions
+ログイン機能を実装した場合のテストアカウント情報や、Basic認証がある場合の ID/Pass をここに記載します。
 
-* ...
+（情報は後で追記）
+
+## 利用方法
+
+簡単な利用手順（例）:
+
+1. サインアップ／ログイン
+2. サイドバーの場所ツリーから場所を選択
+3. アイテムを追加／編集／削除
+
+（詳しい手順は追記予定）
+
+## アプリケーションを作成した背景
+
+目的や解決したい課題をここに記載します。
+
+（後で追記）
+
+## 実装した機能についての画像やGIFおよびその説明
+
+- 実装した機能1: 説明（画像/Gyazo の URL を貼る）
+- 実装した機能2: 説明（GIF は GyazoGIF を利用）
+
+（画像/GIF は後で追加）
+
+## 実装予定の機能
+
+- クイック登録モード
+- 詳細検索（全体検索／現在地検索）
+- 画像アップロード（Active Storage）
+
+## データベース設計
+
+ER図をここに添付してください（画像ファイルや外部リンク）。
+
+## 画面遷移図
+
+画面遷移図をここに添付してください（画像ファイルや外部リンク）。
+
+## 開発環境
+
+- 言語: Ruby/Rails
+- DB: PostgreSQL（本番: Render+Postgres を想定）
+- テスト: RSpec
+
+## ローカルでの動作方法
+- git clone <リポジトリ URL>
+- cd placenest
+- bundle install
+- bin/rails db:create db:migrate
+- bin/rails server
+
+- ブラウザで http://localhost:3000 を開く
+
+
+## 工夫したポイント
+
+- 階層管理に `ancestry` を導入し、柔軟な場所構造を実現
+- 未分類を専用の `Place` で扱うことで `nil` 管理を排除
+
+（詳細は後で追記）
+
+## 改善点
+
+- 画面のUX改善（連続登録、成功メッセージなど）
+- インデックスやキャッシュによるパフォーマンス改善
+
+## 制作時間
+
+制作にかけた時間をここに記載してください。
+
+---
+
+更新履歴
+
+- 2026-01-08: README にプロジェクト情報セクションを追加（雛形）。
