@@ -1,11 +1,39 @@
-<h1>Places</h1>
+<nav>
+  <p><%= link_to "ルートにPlaceを作る", new_place_path %></p>
 
-<ul>
-  <% @places.each do |place| %>
-    <li>
-      <%= link_to place.name, place_path(place) %>
-    </li>
+  <% if user_signed_in? %>
+    <% unclassified = current_user.unclassified_place %>
+
+    <% if unclassified.present? %>
+      <p><%= link_to "未分類に追加", new_place_item_path(unclassified) %></p>
+
+      <h2>簡易登録（未分類に追加）</h2>
+      <%= form_with url: quick_create_items_path, scope: :item, method: :post do |f| %>
+        <div>
+          <%= f.label :name, "名前" %>
+          <%= f.text_field :name, required: true %>
+        </div>
+
+        <div>
+          <%= f.label :quantity, "数量" %>
+          <%= f.number_field :quantity, min: 0 %>
+        </div>
+
+        <div>
+          <%= f.label :note, "メモ" %>
+          <%= f.text_area :note %>
+        </div>
+
+        <div>
+          <%= f.label :status, "ステータス" %>
+          <%= f.text_field :status %>
+        </div>
+
+        <%= f.submit "未分類に追加" %>
+      <% end %>
+
+    <% else %>
+      <p>未分類Placeが未作成です（seed/自動作成を確認してください）</p>
+    <% end %>
   <% end %>
-</ul>
-
-<p><%= link_to "ルートにPlaceを作る", new_place_path %></p>
+</nav>

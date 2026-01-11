@@ -1,25 +1,22 @@
-<h1>Item追加（<%= @place.name %>）</h1>
+<h1>Item 新規作成</h1>
 
-<%= form_with model: @item, url: place_items_path(@place) do |f| %>
-  <div>
-    <%= f.label :name %>
+<% if @place.present? %>
+  <p>場所: <%= @place.name %></p>
+
+  <%= form_with model: [@place, @item] do |f| %>
+    <%= f.label :name, "名前" %>
     <%= f.text_field :name %>
-  </div>
 
-  <div>
-    <%= f.label :quantity %>
-    <%= f.number_field :quantity, min: 1, value: 1 %>
-  </div>
+    <%= f.submit "登録" %>
+  <% end %>
+<% else %>
+  <%= form_with model: @item do |f| %>
+    <%= f.label :place_id, "場所" %>
+    <%= f.collection_select :place_id, @places, :id, :name %>
 
-  <div>
-    <%= f.label :note %>
-    <%= f.text_area :note %>
-  </div>
+    <%= f.label :name, "名前" %>
+    <%= f.text_field :name %>
 
-  <div>
-    <%= f.label :status %>
-    <%= f.select :status, Item.statuses.keys %>
-  </div>
-
-  <%= f.submit "追加" %>
+    <%= f.submit "登録" %>
+  <% end %>
 <% end %>

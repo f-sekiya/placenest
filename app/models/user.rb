@@ -10,9 +10,19 @@ class User < ApplicationRecord
   has_many :places
   has_many :items
 
+  after_create_commit :ensure_unclassified_place
+
+  def unclassified_place
+    places.find_by(name: "未分類")
+  end
+
   before_destroy :destroy_user_data
 
   private
+  def ensure_unclassified_place
+    places.find_or_create_by!(name: "未分類")
+  end
+  
   def destroy_user_data
     ActiveRecord::Base.transaction do
       begin
