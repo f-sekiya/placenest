@@ -10,6 +10,8 @@
   <%= link_to "このPlaceを削除", place_path(@place), method: :delete, data: { confirm: "このPlaceを削除しますか？サブPlacesとItemsも削除されます。" } %>
 </p>
 
+<turbo-frame id="place_new"></turbo-frame>
+
 <h2>子Places</h2>
 <ul>
   <% @children.each do |child| %>

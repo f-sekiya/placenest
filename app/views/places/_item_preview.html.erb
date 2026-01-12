@@ -1,0 +1,17 @@
+<h3>Item プレビュー</h3>
+
+<p><strong>名前:</strong> <%= item.name %></p>
+<p><strong>数量:</strong> <%= item.quantity %></p>
+<p><strong>状態:</strong> <%= item.status %></p>
+
+<% if item.note.present? %>
+  <p><strong>メモ:</strong><br><%= simple_format(item.note) %></p>
+<% end %>
+
+<div class="right-actions">
+  <%= button_to "削除",
+                place_item_path(place, item),
+                method: :delete,
+                data: { turbo_confirm: "削除しますか？" },
+                class: "btn btn--danger" %>
+</div>

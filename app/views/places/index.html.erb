@@ -1,39 +1,84 @@
-<nav>
-  <p><%= link_to "ルートにPlaceを作る", new_place_path %></p>
+<% content_for :left do %>
+  <div class="left-head">
+    <h2 class="left-head__title">PLACE</h2>
 
-  <% if user_signed_in? %>
-    <% unclassified = current_user.unclassified_place %>
-
-    <% if unclassified.present? %>
-      <p><%= link_to "未分類に追加", new_place_item_path(unclassified) %></p>
-
-      <h2>簡易登録（未分類に追加）</h2>
-      <%= form_with url: quick_create_items_path, scope: :item, method: :post do |f| %>
-        <div>
-          <%= f.label :name, "名前" %>
-          <%= f.text_field :name, required: true %>
-        </div>
-
-        <div>
-          <%= f.label :quantity, "数量" %>
-          <%= f.number_field :quantity, min: 0 %>
-        </div>
-
-        <div>
-          <%= f.label :note, "メモ" %>
-          <%= f.text_area :note %>
-        </div>
-
-        <div>
-          <%= f.label :status, "ステータス" %>
-          <%= f.text_field :status %>
-        </div>
-
-        <%= f.submit "未分類に追加" %>
+    <div class="left-head__actions">
+      <%= turbo_frame_tag "place_new" do %>
+        <%= render "places/new_button", parent_id: @current_place.id %>
       <% end %>
+    </div>
+  </div>
 
-    <% else %>
-      <p>未分類Placeが未作成です（seed/自動作成を確認してください）</p>
-    <% end %>
+  <%= turbo_frame_tag "place_tree" do %>
+    <%= render "places/place_tree", place_tree: @place_tree, current_place: @current_place %>
   <% end %>
-</nav>
+<% end %>
+
+<!-- 中央ヘッダー（現在地を強調） -->
+<div class="middle-head">
+  <div class="middle-head__top">
+    <h2 class="middle-head__title">Item一覧</h2>
+    <div class="middle-head__actions">
+      <%= link_to "この場所に追加", new_place_item_path(@current_place), class: "btn btn--ghost" %>
+      <%= link_to "通常登録", new_item_path, class: "btn btn--ghost" %>
+    </div>
+  </div>
+
+  <div class="middle-head__context">
+    <span class="context-label">現在地</span>
+    <span class="context-place"><%= @current_place.name %></span>
+    <span class="context-meta">（Items: <%= @items.size %>）</span>
+  </div>
+
+  <div class="middle-head__breadcrumb">
+    <%= @current_place.path_string %>
+  </div>
+</div>
+
+<!-- 簡易登録（Place指定UIなし：選択中へ追加） -->
+<div class="quick-form">
+  <h3 class="quick-form__title">簡易登録</h3>
+  <%= form_with url: quick_create_items_path, scope: :item, method: :post, local: true, class: "quick-form__row" do |f| %>
+    <%= hidden_field_tag :place_id, @current_place.id %>
+    <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+    <%= f.number_field :quantity, min: 0, value: 1, class: "input input--small" %>
+    <%= f.submit "追加", class: "btn btn--primary" %>
+  <% end %>
+</div>
+
+<!-- 検索（選択中Place内） -->
+<%= form_with url: root_path, method: :get, local: true, class: "search-form" do |f| %>
+  <%= hidden_field_tag :place_id, @current_place.id %>
+  <%= f.label :q, "検索（選択中Place内）", class: "search-form__label" %>
+  <div class="search-form__row">
+    <%= f.text_field :q, value: @q, placeholder: "Item名で検索", class: "input" %>
+    <%= f.submit "絞り込む", class: "btn btn--ghost" %>
+    <%= link_to "クリア", root_path(place_id: @current_place.id), class: "btn btn--ghost" %>
+  </div>
+<% end %>
+
+<!-- Item一覧（クリック可能：右ペインにプレビュー） -->
+<table class="items-table">
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th class="col-small">数量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+      <tr class="<%= 'is-selected' if @selected_item&.id == item.id %>">
+        <td>
+          <%= link_to item.name,
+                      root_path(place_id: @current_place.id, item_id: item.id, q: (@q.presence)),
+                      class: "item-link" %>
+        </td>
+        <td class="col-small"><%= item.quantity %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% content_for :right do %>
+  <%= render "places/right_pane", current_place: @current_place, selected_item: @selected_item %>
+<% end %>

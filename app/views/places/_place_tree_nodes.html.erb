@@ -1,0 +1,13 @@
+<% nodes.each do |place, children| %>
+  <li class="place-tree__node <%= 'is-active' if current_place&.id == place.id %>">
+    <%= link_to place.name, root_path(place_id: place.id) %>
+
+    <% if children.present? %>
+      <ul class="place-tree__children">
+        <%= render "places/place_tree_nodes",
+                   nodes: children,
+                   current_place: current_place %>
+      </ul>
+    <% end %>
+  </li>
+<% end %>

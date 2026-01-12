@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PlaceNest</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= render "shared/header" %>
+
+    <main class="explorer">
+      <section class="explorer__left">
+        <%= yield :left %>
+      </section>
+
+      <section class="explorer__middle">
+        <%= yield %>
+      </section>
+
+      <aside class="explorer__right">
+        <%= yield :right %>
+      </aside>
+    </main>
+  </body>
+</html>

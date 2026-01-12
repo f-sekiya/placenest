@@ -1,0 +1,29 @@
+/* Authentication pages styles */
+.auth-page{ display:flex; align-items:center; justify-content:center; padding:48px 16px; min-height:60vh; background:linear-gradient(180deg,#f7fafc,#fff); }
+.auth-card{ width:100%; max-width:420px; background:#ffffff; border:1px solid #e6e9ee; border-radius:12px; padding:28px; box-shadow:0 8px 30px rgba(35,47,63,0.06); }
+.auth-title{ margin:0 0 16px; font-size:1.25rem; color:#13263b; text-align:center; }
+.auth-form{ display:flex; flex-direction:column; gap:12px; }
+.auth-field{ display:flex; flex-direction:column; }
+.auth-field label{ font-weight:600; color:#344050; margin-bottom:6px; }
+.auth-input{ padding:10px 12px; border:1px solid #d8e0ea; border-radius:8px; font-size:1rem; }
+.auth-hint{ font-size:0.85rem; color:#62788a; margin-top:4px; }
+.auth-actions{ display:flex; justify-content:center; margin-top:6px; }
+.auth-button{ background:#2b6cb0; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:600; cursor:pointer; }
+.auth-button:hover{ background:#235a97; }
+.auth-footer{ margin-top:14px; text-align:center; font-size:0.95rem; }
+.auth-remember{ flex-direction:row; align-items:center; gap:8px; }
+
+@media (max-width:480px){ .auth-card{ padding:20px; border-radius:10px; } }
+
+/* User page styles (reuse auth-card/button tokens) */
+.user-page{ display:flex; align-items:center; justify-content:center; padding:40px 12px; }
+.user-card{ width:100%; max-width:720px; background:#fff; border:1px solid #e6e9ee; border-radius:12px; padding:24px; box-shadow:0 6px 20px rgba(35,47,63,0.04); }
+.user-name{ margin:0 0 8px; font-size:1.5rem; color:#13263b; }
+.user-meta{ display:grid; grid-template-columns:120px 1fr; gap:8px 16px; margin:12px 0; }
+.user-meta dt{ color:#52606d; font-weight:600; }
+.user-meta dd{ margin:0; color:#233244; }
+.user-actions{ margin-top:16px; display:flex; gap:12px; }
+.button{ padding:8px 14px; border-radius:8px; background:#2b6cb0; color:#fff; text-decoration:none; font-weight:600; }
+.button:hover{ background:#235a97; }
+.button-danger{ background:#e53e3e; }
+.button-danger:hover{ background:#c53030; }

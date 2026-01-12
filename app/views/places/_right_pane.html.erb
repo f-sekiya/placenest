@@ -1,0 +1,6 @@
+<% if selected_item.present? %>
+  <%= render "places/item_preview", place: current_place, item: selected_item %>
+<% else %>
+  <h3>プレビュー</h3>
+  <p>中央の一覧からItemを選択してください。</p>
+<% end %>

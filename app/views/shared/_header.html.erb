@@ -15,7 +15,7 @@
         <ul class="header__nav-list">
           <% if user_signed_in? %>
             <li class="header__nav-item header__nickname">
-              <%= current_user.nickname.presence || current_user.email %>
+              <%= link_to (current_user.nickname.presence || current_user.email), profile_path, class: 'header__link' %>
             </li>
             <li class="header__nav-item">
               <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, class: "header__link" %>

@@ -1,0 +1,21 @@
+<div class="user-page">
+  <div class="user-card">
+    <h1 class="user-name"><%= @user.nickname.presence || @user.email %></h1>
+
+    <dl class="user-meta">
+      <dt>Email</dt>
+      <dd><%= @user.email %></dd>
+
+      <dt>Places</dt>
+      <dd><%= @places_count %></dd>
+
+      <dt>Items</dt>
+      <dd><%= @items_count %></dd>
+    </dl>
+
+    <p class="user-actions">
+      <%= link_to 'Edit profile', edit_user_registration_path, class: 'button' %>
+      <%= link_to '退会する', user_registration_path, data: { turbo_method: :delete, confirm: '退会すると全データが削除されます。よろしいですか？' }, class: 'button button-danger' %>
+    </p>
+  </div>
+</div>

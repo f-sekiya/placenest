@@ -1,19 +1,21 @@
-<h1>Place作成</h1>
+<turbo-frame id="place_new">
+  <h1>Place作成</h1>
 
-<% if @parent.present? %>
-  <p>親: <%= @parent.name %></p>
-<% end %>
+  <% if @parent.present? %>
+    <p>親: <%= @parent.name %></p>
+  <% end %>
 
-<%= form_with model: @place, url: places_path(parent_id: @parent&.id) do |f| %>
-  <div>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-  </div>
+  <%= form_with model: @place, url: places_path(parent_id: @parent&.id) do |f| %>
+    <div>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
 
-  <div>
-    <%= f.label :description, "ルール/メモ" %>
-    <%= f.text_area :description %>
-  </div>
+    <div>
+      <%= f.label :description, "ルール/メモ" %>
+      <%= f.text_area :description %>
+    </div>
 
-  <%= f.submit "作成" %>
-<% end %>
+    <%= f.submit "作成" %>
+  <% end %>
+</turbo-frame>
