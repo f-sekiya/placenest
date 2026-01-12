@@ -1,20 +1,25 @@
 <% content_for :left do %>
   <div class="left-head">
-    <h2 class="left-head__title">PLACE</h2>
+    <h2 class="left-head__title">場所</h2>
 
-    <div class="left-head__actions">
-      <%= turbo_frame_tag "place_new" do %>
-        <%= render "places/new_button", parent_id: @current_place.id %>
-      <% end %>
+    <!-- ここが「＋→フォーム→（保存/失敗で差し替え）」される領域 -->
+    <div id="place_new">
+      <%= render "places/place_new",
+                 place: @new_place,
+                 parent_id: @current_place&.id,
+                 open: false %>
     </div>
   </div>
 
+  <!-- ここがツリー更新される領域 -->
   <%= turbo_frame_tag "place_tree" do %>
-    <%= render "places/place_tree", place_tree: @place_tree, current_place: @current_place %>
+    <%= render "places/place_tree",
+               place_tree: @place_tree,
+               current_place: @current_place %>
   <% end %>
 <% end %>
 
-<!-- 中央ヘッダー（現在地を強調） -->
+<!-- 中央ヘッダー -->
 <div class="middle-head">
   <div class="middle-head__top">
     <h2 class="middle-head__title">Item一覧</h2>
