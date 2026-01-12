@@ -1,8 +1,26 @@
 <% content_for :left do %>
+
+  <!-- 簡易登録（未分類へ追加） -->
+  <div class="left-quick">
+    <h3 class="left-quick__title">簡易登録</h3>
+    <p class="left-quick__hint">追加先：未分類</p>
+
+    <%= form_with url: quick_create_items_path,
+                  scope: :item,
+                  method: :post,
+                  local: true,
+                  class: "left-quick__row" do |f| %>
+
+      <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+      <%= f.number_field :quantity, min: 0, value: 1, class: "input input--small" %>
+      <%= f.submit "追加", class: "btn btn--primary" %>
+    <% end %>
+  </div>
+
+  <!-- 既存：場所ヘッダー＋プラス -->
   <div class="left-head">
     <h2 class="left-head__title">場所</h2>
 
-    <!-- ここが「＋→フォーム→（保存/失敗で差し替え）」される領域 -->
     <div id="place_new">
       <%= render "places/place_new",
                  place: @new_place,
@@ -11,13 +29,17 @@
     </div>
   </div>
 
-  <!-- ここがツリー更新される領域 -->
-  <%= turbo_frame_tag "place_tree" do %>
-    <%= render "places/place_tree",
-               place_tree: @place_tree,
-               current_place: @current_place %>
-  <% end %>
+  <!-- 既存：ツリー（ここをスクロール領域にする） -->
+  <div class="left-tree">
+    <%= turbo_frame_tag "place_tree" do %>
+      <%= render "places/place_tree",
+                 place_tree: @place_tree,
+                 current_place: @current_place %>
+    <% end %>
+  </div>
+
 <% end %>
+
 
 <!-- 中央ヘッダー -->
 <div class="middle-head">
@@ -38,17 +60,6 @@
   <div class="middle-head__breadcrumb">
     <%= @current_place.path_string %>
   </div>
-</div>
-
-<!-- 簡易登録（Place指定UIなし：選択中へ追加） -->
-<div class="quick-form">
-  <h3 class="quick-form__title">簡易登録</h3>
-  <%= form_with url: quick_create_items_path, scope: :item, method: :post, local: true, class: "quick-form__row" do |f| %>
-    <%= hidden_field_tag :place_id, @current_place.id %>
-    <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
-    <%= f.number_field :quantity, min: 0, value: 1, class: "input input--small" %>
-    <%= f.submit "追加", class: "btn btn--primary" %>
-  <% end %>
 </div>
 
 <!-- 検索（選択中Place内） -->

@@ -20,7 +20,8 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      redirect_to place_path(place), notice: "Itemを追加しました"
+      # トップ(Explorer)へ戻す。作成したItemを右ペイン選択にしたいなら item_id も渡す
+      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: "Itemを追加しました"
     else
       if params[:place_id].blank?
         set_places_for_select
@@ -37,18 +38,21 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      redirect_to place_path(place), notice: "未分類に追加しました"
+      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: "未分類に追加しました"
     else
-      redirect_to places_path, alert: @item.errors.full_messages.to_sentence
+      # エラーもトップに戻して出す（places_path だと別画面になるため）
+      redirect_to root_path(place_id: place.id), alert: @item.errors.full_messages.to_sentence
     end
   end
 
   def destroy
     @item = @place.items.find(params[:id])
+
     if @item.destroy
-      redirect_to place_path(@place), notice: "Itemを削除しました"
+      # 削除後は item_id を付けない（消えたItemを選択しようとしない）
+      redirect_to root_path(place_id: @place.id), notice: "Itemを削除しました"
     else
-      redirect_to place_path(@place), alert: @item.errors.full_messages.to_sentence
+      redirect_to root_path(place_id: @place.id), alert: @item.errors.full_messages.to_sentence
     end
   end
 

@@ -17,6 +17,55 @@
   border-radius: 12px;
 }
 
+/* 左ペインは「上=固定 / 下=ツリーだけスクロール」にする */
+.explorer__left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;   /* ←共通の overflow:auto を左だけ無効化 */
+  min-height: 0;      /* ←子要素の overflow を効かせる定番 */
+}
+
+/* 左上：簡易登録（未分類） */
+.left-quick {
+  border: 1px solid #e6e8ee;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.left-quick__title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.left-quick__hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.left-quick__row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ツリー領域だけスクロール */
+.left-tree {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* 左に移したとき、quick-form の余白が過剰なら調整（任意） */
+.explorer__left .quick-form {
+  margin-bottom: 0;
+}
+
 /* 左ヘッダー */
 .left-head {
   margin-bottom: 10px;
@@ -339,4 +388,51 @@
 
 .place-tree__delete:hover {
   background: rgba(0, 0, 0, 0.06);
+}
+
+/* ページ中央寄せラッパー */
+.page-center {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.page-center .quick-form {
+  width: 100%;
+  max-width: 640px;
+}
+
+/* アクセシビリティユーティリティ */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* フォーカス/アクセシビリティの微調整 */
+.input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+/* 小画面でのテーブル横スクロールラッパー */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }

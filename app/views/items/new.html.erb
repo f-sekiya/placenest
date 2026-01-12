@@ -1,22 +1,51 @@
-<h1>Item 新規作成</h1>
+<div class="page-center">
+  <div class="quick-form">
+    <h1 class="middle-head__title">Item 新規作成</h1>
 
-<% if @place.present? %>
-  <p>場所: <%= @place.name %></p>
+    <% if @place.present? %>
+      <p class="context-place">場所: <strong><%= @place.name %></strong></p>
 
-  <%= form_with model: [@place, @item] do |f| %>
-    <%= f.label :name, "名前" %>
-    <%= f.text_field :name %>
+      <%= form_with model: [@place, @item], class: "place-add__body" do |f| %>
+        <% if @item.errors.any? %>
+          <div class="place-add__error" role="alert">
+            <p><strong><%= pluralize(@item.errors.count, "error") %> が発生しました:</strong></p>
+            <ul>
+              <% @item.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-    <%= f.submit "登録" %>
-  <% end %>
-<% else %>
-  <%= form_with model: @item do |f| %>
-    <%= f.label :place_id, "場所" %>
-    <%= f.collection_select :place_id, @places, :id, :name %>
+        <div class="place-add__row">
+          <%= f.label :name, "名前", class: "visually-hidden" %>
+          <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+          <%= f.submit "登録", class: "btn btn--primary" %>
+        </div>
+      <% end %>
+    <% else %>
+      <%= form_with model: @item, class: "place-add__body" do |f| %>
+        <% if @item.errors.any? %>
+          <div class="place-add__error" role="alert">
+            <p><strong><%= pluralize(@item.errors.count, "error") %> が発生しました:</strong></p>
+            <ul>
+              <% @item.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-    <%= f.label :name, "名前" %>
-    <%= f.text_field :name %>
+        <div class="place-add__row">
+          <%= f.label :place_id, "場所", class: "visually-hidden" %>
+          <%= f.collection_select :place_id, @places, :id, :name, {}, { class: "input" } %>
 
-    <%= f.submit "登録" %>
-  <% end %>
-<% end %>
+          <%= f.label :name, "名前", class: "visually-hidden" %>
+          <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+
+          <%= f.submit "登録", class: "btn btn--primary" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
