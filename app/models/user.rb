@@ -13,46 +13,41 @@ class User < ApplicationRecord
   after_create_commit :ensure_unclassified_place
 
   def unclassified_place
-    places.find_by(name: "未分類")
+    places.find_by(name: '未分類')
   end
 
   before_destroy :destroy_user_data
 
   private
+
   def ensure_unclassified_place
-    places.find_or_create_by!(name: "未分類")
+    places.find_or_create_by!(name: '未分類')
   end
-  
+
   def destroy_user_data
     ActiveRecord::Base.transaction do
-      begin
-        # 1) destroy items first to avoid Place deletion being blocked by items
-        items.find_each do |it|
-          it.destroy!
-        end
+      # 1) destroy items first to avoid Place deletion being blocked by items
+      items.find_each(&:destroy!)
 
-        # 2) destroy places from deepest to shallowest using Ruby-calculated depth
-        sorted_places = places.to_a.sort_by do |pl|
-          if pl.respond_to?(:depth) && pl.depth
-            -pl.depth
-          else
-            -pl.ancestry.to_s.split('/').reject(&:empty?).size
-          end
+      # 2) destroy places from deepest to shallowest using Ruby-calculated depth
+      sorted_places = places.to_a.sort_by do |pl|
+        if pl.respond_to?(:depth) && pl.depth
+          -pl.depth
+        else
+          -pl.ancestry.to_s.split('/').reject(&:empty?).size
         end
-
-        sorted_places.each do |pl|
-          pl.destroy!
-        end
-      rescue ActiveRecord::RecordNotDestroyed => e
-        record = e.respond_to?(:record) ? e.record : nil
-        msg = if record && record.respond_to?(:errors)
-                record.errors.full_messages.join(', ')
-              else
-                e.message
-              end
-        errors.add(:base, "Failed to destroy record: #{msg}")
-        throw :abort
       end
+
+      sorted_places.each(&:destroy!)
+    rescue ActiveRecord::RecordNotDestroyed => e
+      record = e.respond_to?(:record) ? e.record : nil
+      msg = if record.respond_to?(:errors)
+              record.errors.full_messages.join(', ')
+            else
+              e.message
+            end
+      errors.add(:base, "Failed to destroy record: #{msg}")
+      throw :abort
     end
   end
 

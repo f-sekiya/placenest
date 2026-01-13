@@ -1,8 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'destroy user data' do
-    it 'destroys all places and items on destroy' do
+  it 'ユーザー作成後に未分類の Place が作成されること' do
+    user = User.create!(email: 'new@example.com', password: 'password', nickname: 'newuser')
+    expect(user.unclassified_place).to be_present
+    expect(user.unclassified_place.name).to eq('未分類')
+  end
+
+  describe 'ユーザーデータ削除' do
+    it '削除時に関連する places と items がすべて削除されること' do
       u = User.create!(email: 'del@test.com', password: 'password', nickname: 'del')
       root = u.places.create!(name: 'root')
       child = root.children.create!(user: u, name: 'child')

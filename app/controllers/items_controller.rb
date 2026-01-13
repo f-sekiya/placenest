@@ -25,7 +25,7 @@ class ItemsController < ApplicationController
     @item = current_user.items.find(params[:id])
 
     if @item.update(item_params)
-      redirect_to root_path(place_id: @item.place_id, item_id: @item.id), notice: "Itemを更新しました"
+      redirect_to root_path(place_id: @item.place_id, item_id: @item.id), notice: 'Itemを更新しました'
     else
       # 編集失敗時も場所選択肢を用意して戻す
       set_places_for_select
@@ -41,7 +41,7 @@ class ItemsController < ApplicationController
 
     if @item.save
       # トップ(Explorer)へ戻す。作成したItemを右ペイン選択にしたいなら item_id も渡す
-      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: "Itemを追加しました"
+      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: 'Itemを追加しました'
     else
       if params[:place_id].blank?
         set_places_for_select
@@ -58,7 +58,7 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: "未分類に追加しました"
+      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: '未分類に追加しました'
     else
       # エラーもトップに戻して出す（places_path だと別画面になるため）
       redirect_to root_path(place_id: place.id), alert: @item.errors.full_messages.to_sentence
@@ -70,7 +70,7 @@ class ItemsController < ApplicationController
 
     if @item.destroy
       # 削除後は item_id を付けない（消えたItemを選択しようとしない）
-      redirect_to root_path(place_id: @place.id), notice: "Itemを削除しました"
+      redirect_to root_path(place_id: @place.id), notice: 'Itemを削除しました'
     else
       redirect_to root_path(place_id: @place.id), alert: @item.errors.full_messages.to_sentence
     end

@@ -1,5 +1,5 @@
 class PlacesController < ApplicationController
-  layout "explorer", only: [:index]
+  layout 'explorer', only: [:index]
   before_action :authenticate_user!
   before_action :set_place, only: [:show, :destroy]
 
@@ -35,14 +35,12 @@ class PlacesController < ApplicationController
     @items = base_items.order(:name)
     if @q.present?
       escaped = ActiveRecord::Base.sanitize_sql_like(@q)
-      @items = @items.where("name LIKE ?", "%#{escaped}%")
+      @items = @items.where('name LIKE ?', "%#{escaped}%")
     end
 
     # 右ペイン選択Item（検索に左右されないよう base_items から拾う）
     @selected_item =
-      if params[:item_id].present? && @current_place.present?
-        base_items.find_by(id: params[:item_id])
-      end
+      (base_items.find_by(id: params[:item_id]) if params[:item_id].present? && @current_place.present?)
   end
 
   def show
@@ -64,7 +62,7 @@ class PlacesController < ApplicationController
     end
 
     if @place.destroy
-      redirect_to root_path(place_id: return_place&.id), notice: "Placeを削除しました"
+      redirect_to root_path(place_id: return_place&.id), notice: 'Placeを削除しました'
     else
       redirect_to root_path(place_id: return_place&.id), alert: @place.errors.full_messages.to_sentence
     end
@@ -78,7 +76,7 @@ class PlacesController < ApplicationController
 
     return unless turbo_frame_request?
 
-    render partial: "places/inline_form",
+    render partial: 'places/inline_form',
            locals: { place: @place, parent_id: @parent&.id }
   end
 
@@ -86,9 +84,7 @@ class PlacesController < ApplicationController
     @place = current_user.places.new(place_params)
 
     # ルートに追加（親なし）を強制
-    if params[:place_scope] == "root"
-      @place.parent_id = nil
-    end
+    @place.parent_id = nil if params[:place_scope] == 'root'
 
     current_place = resolve_current_place_from(params[:return_place_id])
 
@@ -99,13 +95,13 @@ class PlacesController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.update(
-              "place_tree",
-              partial: "places/place_tree",
+              'place_tree',
+              partial: 'places/place_tree',
               locals: { place_tree: @place_tree, current_place: current_place }
             ),
             turbo_stream.update(
-              "place_new",
-              partial: "places/place_new",
+              'place_new',
+              partial: 'places/place_new',
               locals: {
                 place: current_user.places.new(parent_id: current_place&.id),
                 parent_id: current_place&.id,
@@ -116,15 +112,15 @@ class PlacesController < ApplicationController
         end
 
         format.html do
-          redirect_to root_path(place_id: current_place&.id), notice: "Placeを作成しました"
+          redirect_to root_path(place_id: current_place&.id), notice: 'Placeを作成しました'
         end
       end
     else
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.update(
-            "place_new",
-            partial: "places/place_new",
+            'place_new',
+            partial: 'places/place_new',
             locals: { place: @place, parent_id: current_place&.id, open: true }
           )
         end

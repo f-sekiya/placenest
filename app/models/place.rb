@@ -6,7 +6,7 @@ class Place < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 50 }
 
-  def path_string(separator: " / ")
+  def path_string(separator: ' / ')
     path.map(&:name).join(separator)
   end
 end

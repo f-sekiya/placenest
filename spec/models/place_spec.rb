@@ -6,7 +6,7 @@ RSpec.describe Place, type: :model do
   describe 'deletion restrictions' do
     it 'raises Ancestry::AncestryException when parent has children' do
       parent = user.places.create!(name: 'parent')
-      child = parent.children.create!(user: user, name: 'child')
+      parent.children.create!(user: user, name: 'child')
       expect { parent.destroy }.to raise_error(Ancestry::AncestryException)
     end
 
