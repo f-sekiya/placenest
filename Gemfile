@@ -71,6 +71,10 @@ group :test do
   gem "selenium-webdriver"
 end
 
+group :production do
+  gem 'pg'
+end
+
 gem "devise"
 gem 'devise-i18n'
 gem "ancestry"
