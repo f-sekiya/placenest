@@ -7,6 +7,14 @@ class PlacesController < ApplicationController
     # 左ツリー（階層表示用）
     @place_tree = current_user.places.arrange(order: :name)
 
+    if (unclassified = current_user.unclassified_place)
+      root_key = @place_tree.keys.find { |p| p.id == unclassified.id }
+      if root_key
+        val = @place_tree.delete(root_key)
+        @place_tree = { root_key => val }.merge(@place_tree)
+      end
+    end
+
     # 現在地（place_id が無ければ未分類）
     @current_place =
       if params[:place_id].present?
@@ -23,7 +31,8 @@ class PlacesController < ApplicationController
 
     # 検索（選択中Place内）
     @q = params[:q].to_s.strip
-    @items = base_items.order(created_at: :desc)
+    # Items一覧を名前順に表示
+    @items = base_items.order(:name)
     if @q.present?
       escaped = ActiveRecord::Base.sanitize_sql_like(@q)
       @items = @items.where("name LIKE ?", "%#{escaped}%")
@@ -38,7 +47,8 @@ class PlacesController < ApplicationController
 
   def show
     @children = @place.children.order(:id)
-    @items = @place.items.order(:id)
+    # show ページの Item も名前順にする
+    @items = @place.items.order(:name)
   end
 
   def destroy

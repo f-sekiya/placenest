@@ -2,7 +2,7 @@
 
   <!-- 簡易登録（未分類へ追加） -->
   <div class="left-quick">
-    <h3 class="left-quick__title">簡易登録</h3>
+    <h3 class="left-quick__title">Item簡易登録</h3>
     <p class="left-quick__hint">追加先：未分類</p>
 
     <%= form_with url: quick_create_items_path,
@@ -17,9 +17,9 @@
     <% end %>
   </div>
 
-  <!-- 既存：場所ヘッダー＋プラス -->
+  <!-- Placeツリー -->
   <div class="left-head">
-    <h2 class="left-head__title">場所</h2>
+    <h2 class="left-head__title">Place</h2>
 
     <div id="place_new">
       <%= render "places/place_new",
@@ -29,7 +29,6 @@
     </div>
   </div>
 
-  <!-- 既存：ツリー（ここをスクロール領域にする） -->
   <div class="left-tree">
     <%= turbo_frame_tag "place_tree" do %>
       <%= render "places/place_tree",
@@ -46,7 +45,6 @@
   <div class="middle-head__top">
     <h2 class="middle-head__title">Item一覧</h2>
     <div class="middle-head__actions">
-      <%= link_to "この場所に追加", new_place_item_path(@current_place), class: "btn btn--ghost" %>
       <%= link_to "通常登録", new_item_path, class: "btn btn--ghost" %>
     </div>
   </div>

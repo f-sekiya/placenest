@@ -1,0 +1,38 @@
+<div class="page-center page-center--top">
+  <div class="quick-form">
+    <h1 class="middle-head__title">Item 編集</h1>
+
+    <%# 場所を移動できるよう、常に場所選択を表示する %>
+    <%= form_with model: (@place.present? ? [@place, @item] : @item), class: "place-add__body" do |f| %>
+      <div class="place-add__row">
+        <%= f.label :place_id, "場所", class: "visually-hidden" %>
+        <%= f.collection_select :place_id, @places, :id, :name, {}, { class: "input" } %>
+      </div>
+
+      <% if @place.present? %>
+        <p class="context-place">現在の場所: <strong><%= @place.name %></strong></p>
+      <% end %>
+        <% if @item.errors.any? %>
+          <div class="place-add__error" role="alert">
+            <p><strong><%= pluralize(@item.errors.count, "error") %> が発生しました:</strong></p>
+            <ul>
+              <% @item.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="place-add__row">
+          <%= f.label :name, "名前", class: "visually-hidden" %>
+          <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+          <%= f.label :quantity, "数量", class: "visually-hidden" %>
+          <%= f.number_field :quantity, value: (@item.quantity || 1), min: 1, class: "input", placeholder: "数量" %>
+
+          <%= f.label :status, "状態", class: "visually-hidden" %>
+          <%= f.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, { class: "input" } %>
+          <%= f.submit "更新", class: "btn btn--primary" %>
+        </div>
+    <% end %>
+  </div>
+</div>

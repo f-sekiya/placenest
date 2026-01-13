@@ -1,4 +1,4 @@
-<div class="page-center">
+<div class="page-center page-center--top">
   <div class="quick-form">
     <h1 class="middle-head__title">Item 新規作成</h1>
 
@@ -20,6 +20,11 @@
         <div class="place-add__row">
           <%= f.label :name, "名前", class: "visually-hidden" %>
           <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+          <%= f.label :quantity, "数量", class: "visually-hidden" %>
+          <%= f.number_field :quantity, value: (@item.quantity || 1), min: 1, class: "input", placeholder: "数量" %>
+
+          <%= f.label :status, "状態", class: "visually-hidden" %>
+          <%= f.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, { class: "input" } %>
           <%= f.submit "登録", class: "btn btn--primary" %>
         </div>
       <% end %>
@@ -42,6 +47,11 @@
 
           <%= f.label :name, "名前", class: "visually-hidden" %>
           <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+          <%= f.label :quantity, "数量", class: "visually-hidden" %>
+          <%= f.number_field :quantity, value: (@item.quantity || 1), min: 1, class: "input", placeholder: "数量" %>
+
+          <%= f.label :status, "状態", class: "visually-hidden" %>
+          <%= f.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, { class: "input" } %>
 
           <%= f.submit "登録", class: "btn btn--primary" %>
         </div>

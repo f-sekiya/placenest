@@ -9,6 +9,12 @@
 <% end %>
 
 <div class="right-actions">
+  <% if place.present? %>
+    <%= link_to "編集", edit_place_item_path(place, item), class: "btn btn--ghost" %>
+  <% else %>
+    <%= link_to "編集", edit_item_path(item), class: "btn btn--ghost" %>
+  <% end %>
+
   <%= button_to "削除",
                 place_item_path(place, item),
                 method: :delete,

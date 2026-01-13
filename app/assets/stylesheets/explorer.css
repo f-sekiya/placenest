@@ -72,8 +72,8 @@
 }
 .left-head__title {
   margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 /* Placeツリー */
@@ -300,6 +300,21 @@
 
 .place-add__summary {
   user-select: none;
+  border: none;
+  background: transparent;
+  color: #6b7280; /* muted gray */
+  padding: 4px 8px; /* smaller */
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.place-add__summary:hover {
+  background: #f8fafc; /* very subtle hover */
+  color: #374151;
+  transform: translateY(-1px);
 }
 
 .place-add__body {
@@ -405,6 +420,11 @@
   max-width: 640px;
 }
 
+.page-center.page-center--top {
+  align-items: flex-start;
+  padding-top: 100px;
+}
+
 /* アクセシビリティユーティリティ */
 .visually-hidden {
   position: absolute !important;
@@ -428,6 +448,23 @@
 .btn:focus {
   outline: none;
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+/* 右ペインのアクション（編集/削除）を横並びにする */
+.right-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.right-actions form {
+  margin: 0;
+  display: inline-block;
+}
+.right-actions a,
+.right-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* 小画面でのテーブル横スクロールラッパー */

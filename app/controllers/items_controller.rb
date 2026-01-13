@@ -1,6 +1,8 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_place_from_nested, only: [:new, :create, :destroy], if: -> { params[:place_id].present? }
+  before_action :set_place_from_nested, only: [:new, :create, :edit, :update, :destroy], if: -> { params[:place_id].present? }
+
+  before_action :set_item, only: [:edit, :update]
 
   def new
     @item = current_user.items.new
@@ -10,6 +12,24 @@ class ItemsController < ApplicationController
     else
       set_places_for_select
       @item.place = current_user.unclassified_place
+    end
+  end
+
+  def edit
+    @item = current_user.items.find(params[:id])
+    # 編集時は常に場所選択肢を用意する（場所の移動を許可）
+    set_places_for_select
+  end
+
+  def update
+    @item = current_user.items.find(params[:id])
+
+    if @item.update(item_params)
+      redirect_to root_path(place_id: @item.place_id, item_id: @item.id), notice: "Itemを更新しました"
+    else
+      # 編集失敗時も場所選択肢を用意して戻す
+      set_places_for_select
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -60,6 +80,10 @@ class ItemsController < ApplicationController
 
   def set_place_from_nested
     @place = current_user.places.find(params[:place_id])
+  end
+
+  def set_item
+    @item = current_user.items.find(params[:id])
   end
 
   def set_places_for_select
