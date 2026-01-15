@@ -50,11 +50,11 @@
 	- `users` (Deviseで認証、`nickname` を保持)
 	- `places` (階層構造: `ancestry`, `name`, `description`, `user_id`)
 	- `items` (`name`, `quantity`, `note`, `status`, `place_id`, `user_id`)
-- ER図: `docs/er_diagram.png` を参照（未作成の場合は後日追加します）
+- ER図: [![Image from Gyazo](https://i.gyazo.com/b2b7c38a34c63943f3cb85dabf052738.png)](https://gyazo.com/b2b7c38a34c63943f3cb85dabf052738)
 
 **画面遷移図**
 
-- 画面遷移図: `docs/wireflow.png` を参照（未作成の場合は後日追加します）
+- 画面遷移図: [![Image from Gyazo](https://i.gyazo.com/d2d7bc9f018b7581649f7782b0410878.png)](https://gyazo.com/d2d7bc9f018b7581649f7782b0410878)
 
 **開発環境**
 
@@ -69,7 +69,7 @@
 1. リポジトリをクローン
 
 ```bash
-git clone <REPO_URL>
+git clone https://github.com/f-sekiya/placenest.git
 cd placenest
 ```
 
