@@ -1,0 +1,104 @@
+/* Simple styles for user edit form (used if Bootstrap is not present) */
+.user-edit {
+  max-width: 720px;
+  margin: 12px auto;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.user-edit h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  color: #222;
+}
+
+.user-edit h2,
+.user-edit h3 {
+  text-align: center;
+}
+
+.user-edit .account-actions {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.form-group {
+  margin-bottom: 8px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+  font-size: 13px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 13px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #7aa7ff;
+  box-shadow: 0 0 0 3px rgba(122,167,255,0.12);
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.btn-primary {
+  background: #2f80ed;
+  color: #fff;
+  border-color: #2f80ed;
+}
+
+.btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border-color: #e74c3c;
+}
+
+.btn-link {
+  background: transparent;
+  color: #2f80ed;
+  border-color: transparent;
+}
+
+/* responsive */
+@media (max-width: 480px) {
+  .user-edit { padding: 10px; margin: 8px; }
+  .form-control { padding: 8px; }
+  .btn { padding: 6px 8px; }
+}
+
+.user-edit h2,
+.user-edit h3 {
+  text-align: center;
+}
+
+.user-edit .account-actions {
+  text-align: center;
+  margin-top: 12px;
+}
