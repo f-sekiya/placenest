@@ -15,4 +15,8 @@
   <% if place.errors.any? %>
     <p class="place-inline-form__error"><%= place.errors.full_messages.to_sentence %></p>
   <% end %>
+  
+  <div class="place-inline-form__row">
+    <%= f.text_area :description, placeholder: "メモ（任意）", rows: 2, class: "input" %>
+  </div>
 <% end %>

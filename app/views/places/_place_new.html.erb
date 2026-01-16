@@ -8,6 +8,8 @@
 
       <div class="place-add__row">
         <%= f.text_field :name, placeholder: "Place名（必須）", required: true, class: "input" %>
+        
+        <%= f.text_area :description, placeholder: "メモ（任意）", rows: 2, class: "input" %>
 
         <!-- 子として作成（従来どおり） -->
         <%= button_tag "子に追加",
