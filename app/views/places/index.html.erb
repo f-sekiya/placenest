@@ -58,6 +58,10 @@
   <div class="middle-head__breadcrumb">
     <%= @current_place.path_string %>
   </div>
+
+  <% if @current_place.description.present? %>
+    <p class="place-memo"><%= simple_format(@current_place.description) %></p>
+  <% end %>
 </div>
 
 <!-- 検索（選択中Place内） -->

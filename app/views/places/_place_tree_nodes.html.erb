@@ -5,17 +5,28 @@
                   root_path(place_id: place.id),
                   data: { turbo_frame: "_top" },
                   class: "place-tree__link" %>
+      
 
       <% unclassified_id = current_user.unclassified_place&.id %>
       <% unless place.id == unclassified_id %>
-        <%= button_to place_path(place, return_place_id: current_place&.id),
-                      method: :delete,
-                      form: { data: { turbo_frame: "_top" } },
-                      data: { turbo_confirm: "「#{place.name}」を削除しますか？（子Place/Itemがある場合は削除できません）" },
-                      class: "place-tree__delete",
-                      aria: { label: "#{place.name}を削除" } do %>
-          削除
-        <% end %>
+        <div class="place-tree__actions">
+          <%= button_to edit_place_path(place),
+                        method: :get,
+                        form: { data: { turbo_frame: "place_new" } },
+                        class: "place-tree__delete",
+                        aria: { label: "#{place.name}を編集" } do %>
+            編集
+          <% end %>
+
+          <%= button_to place_path(place, return_place_id: current_place&.id),
+                        method: :delete,
+                        form: { data: { turbo_frame: "_top" } },
+                        data: { turbo_confirm: "「#{place.name}」を削除しますか？（子Place/Itemがある場合は削除できません）" },
+                        class: "place-tree__delete",
+                        aria: { label: "#{place.name}を削除" } do %>
+            削除
+          <% end %>
+        </div>
       <% end %>
     </div>
 

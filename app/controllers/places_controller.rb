@@ -1,7 +1,7 @@
 class PlacesController < ApplicationController
   layout "explorer", only: [:index]
   before_action :authenticate_user!
-  before_action :set_place, only: [:show, :destroy]
+  before_action :set_place, only: [:show, :edit, :update, :destroy]
 
   def index
     build_place_tree
@@ -40,6 +40,15 @@ class PlacesController < ApplicationController
            locals: { place: @place, parent_id: @parent&.id }
   end
 
+  def edit
+    @parent = current_user.places.find_by(id: @place.parent_id)
+
+    return unless turbo_frame_request?
+
+    render partial: "places/inline_form",
+           locals: { place: @place, parent_id: @parent&.id }
+  end
+
   def create
     @place = current_user.places.new(place_params)
 
@@ -53,6 +62,53 @@ class PlacesController < ApplicationController
       respond_place_create_success(current_place)
     else
       respond_place_create_failure(current_place)
+    end
+  end
+
+  def update
+    current_place = resolve_current_place_from(params[:return_place_id])
+
+    if @place.update(place_params)
+      @place_tree = current_user.places.arrange(order: :name)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(
+              "place_tree",
+              partial: "places/place_tree",
+              locals: { place_tree: @place_tree, current_place: current_place }
+            ),
+            turbo_stream.update(
+              "place_new",
+              partial: "places/place_new",
+              locals: {
+                place: current_user.places.new(parent_id: current_place&.id),
+                parent_id: current_place&.id,
+                open: false
+              }
+            )
+          ]
+        end
+
+        format.html do
+          redirect_to root_path(place_id: current_place&.id), notice: "Placeを更新しました"
+        end
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "place_new",
+            partial: "places/place_new",
+            locals: { place: @place, parent_id: current_place&.id, open: true }
+          )
+        end
+
+        format.html do
+          @parent = current_user.places.find_by(id: @place.parent_id)
+          render :edit, status: :unprocessable_entity
+        end
+      end
     end
   end
 

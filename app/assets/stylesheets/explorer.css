@@ -178,6 +178,17 @@
   text-overflow: ellipsis;
 }
 
+/* 現在地のメモ（place description） */
+.place-memo {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.4;
+  max-height: 6.6em; /* 約5行表示 */
+  overflow: hidden;
+  white-space: pre-wrap; /* 改行をそのまま表示 */
+}
+
 /* 入力/ボタン（最低限） */
 .input {
   width: 100%;
@@ -403,6 +414,18 @@
 
 .place-tree__delete:hover {
   background: rgba(0, 0, 0, 0.06);
+}
+
+/* Placeツリーの右側アクション群（編集/削除）をまとめて隣り合わせにする */
+.place-tree__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.place-tree__actions form {
+  margin: 0;
+  display: inline-block;
 }
 
 /* ページ中央寄せラッパー */
