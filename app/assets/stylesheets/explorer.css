@@ -496,3 +496,65 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+/* Small screens: stack panes vertically and remove fixed height to work well on mobile */
+@media (max-width: 768px) {
+  .explorer {
+    display: block;
+    grid-template-columns: none;
+    gap: 12px;
+    padding: 12px;
+    height: auto; /* allow natural document flow on mobile */
+  }
+
+  .explorer__left,
+  .explorer__middle,
+  .explorer__right {
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    overflow: visible; /* allow sections to grow naturally */
+    max-height: none;
+  }
+
+  /* Left pane: keep quick form visible and make tree scroll within its section if too long */
+  .explorer__left {
+    display: block;
+  }
+
+  .left-tree {
+    max-height: 40vh;
+    overflow: auto;
+  }
+
+  /* Middle content should not be constrained to viewport height on mobile */
+  .middle-head,
+  .place-memo {
+    margin-bottom: 12px;
+  }
+
+  /* Make tables horizontally scrollable but fit mobile width */
+  .items-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Controls and quick-form spacing adjustments */
+  .search-form__row,
+  .quick-form__row,
+  .place-add__row,
+  .place-add__body {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Reduce padding/gaps to fit small screens */
+  .explorer__left,
+  .explorer__middle,
+  .explorer__right,
+  .header__inner {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}

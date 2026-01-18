@@ -18,11 +18,15 @@
       </section>
 
       <section class="explorer__middle">
-        <%= yield %>
+        <%= turbo_frame_tag "middle_pane" do %>
+          <%= yield %>
+        <% end %>
       </section>
 
       <aside class="explorer__right">
-        <%= yield :right %>
+        <%= turbo_frame_tag "right_pane" do %>
+          <%= yield :right %>
+        <% end %>
       </aside>
     </main>
   </body>

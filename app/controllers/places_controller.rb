@@ -9,6 +9,43 @@ class PlacesController < ApplicationController
     prepare_new_place
     prepare_items
     find_selected_item
+
+    respond_to do |format|
+      format.html
+
+      format.turbo_stream do
+        if turbo_frame_request?
+          frame = request.headers['Turbo-Frame']
+
+          case frame
+          when 'middle_pane'
+            render turbo_stream: [
+              turbo_stream.update(
+                'place_tree',
+                partial: 'places/place_tree',
+                locals: { place_tree: @place_tree, current_place: @current_place }
+              ),
+              turbo_stream.update(
+                'middle_pane',
+                partial: 'places/middle_pane'
+              )
+            ]
+
+          when 'right_pane'
+            render turbo_stream: turbo_stream.update(
+              'right_pane',
+              partial: 'places/right_pane',
+              locals: { current_place: @current_place, selected_item: @selected_item }
+            )
+
+          else
+            head :ok
+          end
+        else
+          head :ok
+        end
+      end
+    end
   end
 
   def show

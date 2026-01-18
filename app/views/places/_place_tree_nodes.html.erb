@@ -2,9 +2,9 @@
   <li class="place-tree__node <%= 'is-active' if current_place&.id == place.id %>">
     <div class="place-tree__row">
       <%= link_to place.name,
-                  root_path(place_id: place.id),
-                  data: { turbo_frame: "_top" },
-                  class: "place-tree__link" %>
+          root_path(place_id: place.id),
+          data: { turbo_frame: "middle_pane" },
+          class: "place-tree__link" %>
       
 
       <% unclassified_id = current_user.unclassified_place&.id %>
