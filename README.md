@@ -33,10 +33,14 @@
 
 **実装した機能についての画像やGIFおよびその説明※**
 
-- ログイン・認証: `devise` を利用した登録・ログイン画面（Gyazoリンクをここに貼る）
-- 場所ツリー: `ancestry` を用いた階層ツリー表示。インラインで場所を追加できる（GyazoGIF推奨）
-- 品目管理: 品目の新規作成・編集・削除、未分類クイック追加（Gyazo画像）
-- 検索機能: 選択中の場所内でのキーワード検索（Gyazo画像）
+- ログイン・認証: `devise` を利用した登録・ログイン画面
+[![Image from Gyazo](https://i.gyazo.com/6ac464113d7e79910db429be7901e56d.png)](https://gyazo.com/6ac464113d7e79910db429be7901e56d)
+- 場所ツリー: `ancestry` を用いた階層ツリー表示。インラインで場所を追加できる
+[![Image from Gyazo](https://i.gyazo.com/1716a400a0ca196e9793e443c050eafd.png)](https://gyazo.com/1716a400a0ca196e9793e443c050eafd)
+- 品目管理: 品目の新規作成・編集・削除、未分類クイック追加
+[![Image from Gyazo](https://i.gyazo.com/c78d46849888842121a4bbfea5519e3c.png)](https://gyazo.com/c78d46849888842121a4bbfea5519e3c)
+- 検索機能: 選択中の場所内でのキーワード検索
+[![Image from Gyazo](https://i.gyazo.com/43573ff52dc9404e86b261b003a72b85.png)](https://gyazo.com/43573ff52dc9404e86b261b003a72b85)
 
 **実装予定の機能**
 
