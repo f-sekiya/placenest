@@ -2,7 +2,7 @@
   <div class="auth-card">
     <h2 class="auth-title">Log in</h2>
 
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'auth-form' }) do |f| %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'auth-form', data: { turbo: false } }) do |f| %>
       <div class="auth-field">
         <%= f.label :email %>
         <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'auth-input' %>

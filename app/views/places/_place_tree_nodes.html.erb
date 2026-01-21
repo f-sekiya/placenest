@@ -1,3 +1,4 @@
+<% unclassified_id = current_user.unclassified_place&.id %>
 <% nodes.each do |place, children| %>
   <li class="place-tree__node <%= 'is-active' if current_place&.id == place.id %>">
     <div class="place-tree__row">
@@ -7,7 +8,6 @@
           class: "place-tree__link" %>
       
 
-      <% unclassified_id = current_user.unclassified_place&.id %>
       <% unless place.id == unclassified_id %>
         <div class="place-tree__actions">
           <%= button_to edit_place_path(place),
