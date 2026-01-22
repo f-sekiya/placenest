@@ -69,10 +69,46 @@ class ItemsController < ApplicationController
     @item = @place.items.find(params[:id])
 
     if @item.destroy
-      # 削除後は item_id を付けない（消えたItemを選択しようとしない）
-      redirect_to root_path(place_id: @place.id), notice: 'Itemを削除しました'
+      respond_to do |format|
+        format.html do
+          redirect_to root_path(place_id: @place.id), notice: 'Itemを削除しました'
+        end
+
+        format.turbo_stream do
+          # Prepare variables used by partials
+          @current_place = @place
+          @base_items = @current_place ? @current_place.items : Item.none
+          @q = nil
+          @items = @base_items.order(:name)
+          @selected_item = nil
+
+          render turbo_stream: [
+            turbo_stream.update(
+              'place_tree',
+              partial: 'places/place_tree',
+              locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
+            ),
+            turbo_stream.update(
+              'middle_pane',
+              partial: 'places/middle_pane'
+            ),
+            turbo_stream.update(
+              'right_pane',
+              partial: 'places/right_pane',
+              locals: { current_place: @current_place, selected_item: @selected_item }
+            )
+          ]
+        end
+      end
     else
-      redirect_to root_path(place_id: @place.id), alert: @item.errors.full_messages.to_sentence
+      respond_to do |format|
+        format.html do
+          redirect_to root_path(place_id: @place.id), alert: @item.errors.full_messages.to_sentence
+        end
+
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("flash", partial: 'shared/flash', locals: { alert: @item.errors.full_messages.to_sentence })
+        end
     end
   end
 
