@@ -40,8 +40,40 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      # トップ(Explorer)へ戻す。作成したItemを右ペイン選択にしたいなら item_id も渡す
-      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: 'Itemを追加しました'
+      respond_to do |format|
+        format.html do
+          redirect_to root_path(place_id: place.id, item_id: @item.id), notice: 'Itemを追加しました'
+        end
+
+        format.turbo_stream do
+          @current_place = place
+          @base_items = @current_place ? @current_place.items : Item.none
+          @q = nil
+          @items = @base_items.order(:name)
+          @selected_item = @item
+
+          render turbo_stream: [
+            turbo_stream.update(
+              'place_tree',
+              partial: 'places/place_tree',
+              locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
+            ),
+            turbo_stream.update(
+              'left_quick',
+              partial: 'places/left_quick'
+            ),
+            turbo_stream.update(
+              'middle_pane',
+              partial: 'places/middle_pane'
+            ),
+            turbo_stream.update(
+              'right_pane',
+              partial: 'places/right_pane',
+              locals: { current_place: @current_place, selected_item: @selected_item }
+            )
+          ]
+        end
+      end
     else
       if params[:place_id].blank?
         set_places_for_select
@@ -58,7 +90,40 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      redirect_to root_path(place_id: place.id, item_id: @item.id), notice: '未分類に追加しました'
+      respond_to do |format|
+        format.html do
+          redirect_to root_path(place_id: place.id, item_id: @item.id), notice: '未分類に追加しました'
+        end
+
+        format.turbo_stream do
+          @current_place = place
+          @base_items = @current_place ? @current_place.items : Item.none
+          @q = nil
+          @items = @base_items.order(:name)
+          @selected_item = @item
+
+          render turbo_stream: [
+            turbo_stream.update(
+              'place_tree',
+              partial: 'places/place_tree',
+              locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
+            ),
+            turbo_stream.update(
+              'left_quick',
+              partial: 'places/left_quick'
+            ),
+            turbo_stream.update(
+              'middle_pane',
+              partial: 'places/middle_pane'
+            ),
+            turbo_stream.update(
+              'right_pane',
+              partial: 'places/right_pane',
+              locals: { current_place: @current_place, selected_item: @selected_item }
+            )
+          ]
+        end
+      end
     else
       # エラーもトップに戻して出す（places_path だと別画面になるため）
       redirect_to root_path(place_id: place.id), alert: @item.errors.full_messages.to_sentence
@@ -109,6 +174,7 @@ class ItemsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("flash", partial: 'shared/flash', locals: { alert: @item.errors.full_messages.to_sentence })
         end
+      end
     end
   end
 

@@ -1,0 +1,16 @@
+<!-- 簡易登録（未分類へ追加） partial -->
+<div class="left-quick">
+  <h3 class="left-quick__title">Item簡易登録</h3>
+  <p class="left-quick__hint">追加先：未分類</p>
+
+  <%= form_with model: Item.new,
+                url: quick_create_items_path,
+                method: :post,
+                local: true,
+                class: "left-quick__row" do |f| %>
+
+    <%= f.text_field :name, placeholder: "名前（必須）", required: true, class: "input" %>
+    <%= f.number_field :quantity, min: 0, value: 1, class: "input input--small" %>
+    <%= f.submit "追加", class: "btn btn--primary" %>
+  <% end %>
+</div>

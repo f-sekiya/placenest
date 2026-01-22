@@ -11,10 +11,81 @@ class PlacesController < ApplicationController
     find_selected_item
 
     respond_to do |format|
-      format.html
+      format.html do
+        # If this is a Turbo frame navigation (or explicit item selection),
+        # prefer turbo-stream when the client asks for it. If the client
+        # requested plain HTML (common with some Accept headers), return a
+        # right_pane-wrapped <turbo-frame> HTML fragment and include a small
+        # inline script to toggle the selected row in the middle pane. This
+        # ensures right_pane is replaced and the middle selection is visible
+        # even when turbo-stream is not negotiated.
+        if turbo_frame_request? || params[:item_id].present?
+          accept = request.headers['Accept'].to_s
+
+          if accept.include?('text/vnd.turbo-stream.html')
+            render turbo_stream: [
+              turbo_stream.update(
+                'place_tree',
+                partial: 'places/place_tree',
+                locals: { place_tree: @place_tree, current_place: @current_place }
+              ),
+              turbo_stream.update(
+                'middle_pane',
+                partial: 'places/middle_pane'
+              ),
+              turbo_stream.update(
+                'right_pane',
+                partial: 'places/right_pane',
+                locals: { current_place: @current_place, selected_item: @selected_item }
+              )
+            ]
+          else
+            # Render right pane wrapped in a turbo-frame so Turbo will replace it.
+            right_html = render_to_string(partial: 'places/right_pane', locals: { current_place: @current_place, selected_item: @selected_item })
+
+            # Inline JS: clear existing selection and mark the selected row.
+            selected_id = @selected_item&.id
+            js = <<~JS
+              <script>
+              (function(){
+                try{
+                  var rows = document.querySelectorAll('.items-table tbody tr');
+                  rows.forEach(function(r){ r.classList.remove('is-selected'); });
+                  var row = document.querySelector('.items-table tbody tr[data-item-id="#{selected_id}"]');
+                  if(row) row.classList.add('is-selected');
+                }catch(e){ console.error(e); }
+              })();
+              </script>
+            JS
+
+            render html: "<turbo-frame id=\"right_pane\">#{right_html}#{js}</turbo-frame>".html_safe
+          end
+        else
+          render :index
+        end
+      end
 
       format.turbo_stream do
-        if turbo_frame_request?
+        # Handle turbo requests robustly: if item_id param present, update both middle and right panes
+        if params[:item_id].present?
+          render turbo_stream: [
+            turbo_stream.update(
+              'place_tree',
+              partial: 'places/place_tree',
+              locals: { place_tree: @place_tree, current_place: @current_place }
+            ),
+            turbo_stream.update(
+              'middle_pane',
+              partial: 'places/middle_pane'
+            ),
+            turbo_stream.update(
+              'right_pane',
+              partial: 'places/right_pane',
+              locals: { current_place: @current_place, selected_item: @selected_item }
+            )
+          ]
+
+        elsif turbo_frame_request?
           frame = request.headers['Turbo-Frame']
 
           case frame
@@ -32,15 +103,22 @@ class PlacesController < ApplicationController
             ]
 
           when 'right_pane'
-            render turbo_stream: turbo_stream.update(
-              'right_pane',
-              partial: 'places/right_pane',
-              locals: { current_place: @current_place, selected_item: @selected_item }
-            )
+            render turbo_stream: [
+              turbo_stream.update(
+                'middle_pane',
+                partial: 'places/middle_pane'
+              ),
+              turbo_stream.update(
+                'right_pane',
+                partial: 'places/right_pane',
+                locals: { current_place: @current_place, selected_item: @selected_item }
+              )
+            ]
 
           else
             head :ok
           end
+
         else
           head :ok
         end

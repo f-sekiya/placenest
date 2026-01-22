@@ -43,7 +43,7 @@
   </thead>
   <tbody>
     <% @items.each do |item| %>
-      <tr class="<%= 'is-selected' if @selected_item&.id == item.id %>">
+      <tr data-item-id="<%= item.id %>" class="<%= 'is-selected' if @selected_item&.id == item.id %>">
         <td>
           <%= link_to item.name,
                       root_path(place_id: @current_place.id, item_id: item.id, q: (@q.presence)),
