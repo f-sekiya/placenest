@@ -46,32 +46,8 @@ class ItemsController < ApplicationController
         end
 
         format.turbo_stream do
-          @current_place = place
-          @base_items = @current_place ? @current_place.items : Item.none
-          @q = nil
-          @items = @base_items.order(:name)
-          @selected_item = @item
-
-          render turbo_stream: [
-            turbo_stream.update(
-              'place_tree',
-              partial: 'places/place_tree',
-              locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
-            ),
-            turbo_stream.update(
-              'left_quick',
-              partial: 'places/left_quick'
-            ),
-            turbo_stream.update(
-              'middle_pane',
-              partial: 'places/middle_pane'
-            ),
-            turbo_stream.update(
-              'right_pane',
-              partial: 'places/right_pane',
-              locals: { current_place: @current_place, selected_item: @selected_item }
-            )
-          ]
+          prepare_turbo_stream_state(place: place, selected_item: @item)
+          render turbo_stream: turbo_stream_updates(include_left_quick: true)
         end
       end
     else
@@ -96,32 +72,8 @@ class ItemsController < ApplicationController
         end
 
         format.turbo_stream do
-          @current_place = place
-          @base_items = @current_place ? @current_place.items : Item.none
-          @q = nil
-          @items = @base_items.order(:name)
-          @selected_item = @item
-
-          render turbo_stream: [
-            turbo_stream.update(
-              'place_tree',
-              partial: 'places/place_tree',
-              locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
-            ),
-            turbo_stream.update(
-              'left_quick',
-              partial: 'places/left_quick'
-            ),
-            turbo_stream.update(
-              'middle_pane',
-              partial: 'places/middle_pane'
-            ),
-            turbo_stream.update(
-              'right_pane',
-              partial: 'places/right_pane',
-              locals: { current_place: @current_place, selected_item: @selected_item }
-            )
-          ]
+          prepare_turbo_stream_state(place: place, selected_item: @item)
+          render turbo_stream: turbo_stream_updates(include_left_quick: true)
         end
       end
     else
@@ -140,29 +92,8 @@ class ItemsController < ApplicationController
         end
 
         format.turbo_stream do
-          # Prepare variables used by partials
-          @current_place = @place
-          @base_items = @current_place ? @current_place.items : Item.none
-          @q = nil
-          @items = @base_items.order(:name)
-          @selected_item = nil
-
-          render turbo_stream: [
-            turbo_stream.update(
-              'place_tree',
-              partial: 'places/place_tree',
-              locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
-            ),
-            turbo_stream.update(
-              'middle_pane',
-              partial: 'places/middle_pane'
-            ),
-            turbo_stream.update(
-              'right_pane',
-              partial: 'places/right_pane',
-              locals: { current_place: @current_place, selected_item: @selected_item }
-            )
-          ]
+          prepare_turbo_stream_state(place: @place, selected_item: nil)
+          render turbo_stream: turbo_stream_updates
         end
       end
     else
@@ -190,6 +121,45 @@ class ItemsController < ApplicationController
 
   def set_places_for_select
     @places = current_user.places.order(:name)
+  end
+
+  def prepare_turbo_stream_state(place:, selected_item:)
+    @current_place = place
+    @base_items = @current_place ? @current_place.items : Item.none
+    @q = nil
+    @items = @base_items.order(:name)
+    @selected_item = selected_item
+  end
+
+  def turbo_stream_updates(include_left_quick: false)
+    streams = [
+      turbo_stream.update(
+        'place_tree',
+        partial: 'places/place_tree',
+        locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
+      ),
+      turbo_stream.update(
+        'middle_pane',
+        partial: 'places/middle_pane'
+      ),
+      turbo_stream.update(
+        'right_pane',
+        partial: 'places/right_pane',
+        locals: { current_place: @current_place, selected_item: @selected_item }
+      )
+    ]
+
+    if include_left_quick
+      streams.insert(
+        1,
+        turbo_stream.update(
+          'left_quick',
+          partial: 'places/left_quick'
+        )
+      )
+    end
+
+    streams
   end
 
   def resolve_place_for_create!
