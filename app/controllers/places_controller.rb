@@ -40,25 +40,35 @@ class PlacesController < ApplicationController
               )
             ]
           else
-            # Render right pane wrapped in a turbo-frame so Turbo will replace it.
-            right_html = render_to_string(partial: 'places/right_pane', locals: { current_place: @current_place, selected_item: @selected_item })
+            frame = request.headers['Turbo-Frame'].to_s
 
-            # Inline JS: clear existing selection and mark the selected row.
-            selected_id = @selected_item&.id
-            js = <<~JS
-              <script>
-              (function(){
-                try{
-                  var rows = document.querySelectorAll('.items-table tbody tr');
-                  rows.forEach(function(r){ r.classList.remove('is-selected'); });
-                  var row = document.querySelector('.items-table tbody tr[data-item-id="#{selected_id}"]');
-                  if(row) row.classList.add('is-selected');
-                }catch(e){ console.error(e); }
-              })();
-              </script>
-            JS
+            case frame
+            when 'middle_pane'
+              middle_html = render_to_string(partial: 'places/middle_pane')
+              render html: "<turbo-frame id=\"middle_pane\">#{middle_html}</turbo-frame>".html_safe
+            when 'right_pane'
+              # Render right pane wrapped in a turbo-frame so Turbo will replace it.
+              right_html = render_to_string(partial: 'places/right_pane', locals: { current_place: @current_place, selected_item: @selected_item })
 
-            render html: "<turbo-frame id=\"right_pane\">#{right_html}#{js}</turbo-frame>".html_safe
+              # Inline JS: clear existing selection and mark the selected row.
+              selected_id = @selected_item&.id
+              js = <<~JS
+                <script>
+                (function(){
+                  try{
+                    var rows = document.querySelectorAll('.items-table tbody tr');
+                    rows.forEach(function(r){ r.classList.remove('is-selected'); });
+                    var row = document.querySelector('.items-table tbody tr[data-item-id="#{selected_id}"]');
+                    if(row) row.classList.add('is-selected');
+                  }catch(e){ console.error(e); }
+                })();
+                </script>
+              JS
+
+              render html: "<turbo-frame id=\"right_pane\">#{right_html}#{js}</turbo-frame>".html_safe
+            else
+              render :index
+            end
           end
         else
           render :index
