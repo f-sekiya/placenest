@@ -36,16 +36,7 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      respond_to do |format|
-        format.html do
-          redirect_to root_path(place_id: place.id, item_id: @item.id), notice: 'Itemを追加しました'
-        end
-
-        format.turbo_stream do
-          prepare_turbo_stream_state(place: place, selected_item: @item)
-          render turbo_stream: turbo_stream_updates(include_left_quick: true)
-        end
-      end
+      respond_item_success(place: place, notice: 'Itemを追加しました', selected_item: @item, include_left_quick: true)
     else
       if params[:place_id].blank?
         set_places_for_select
@@ -62,16 +53,7 @@ class ItemsController < ApplicationController
     @item.place = place
 
     if @item.save
-      respond_to do |format|
-        format.html do
-          redirect_to root_path(place_id: place.id, item_id: @item.id), notice: '未分類に追加しました'
-        end
-
-        format.turbo_stream do
-          prepare_turbo_stream_state(place: place, selected_item: @item)
-          render turbo_stream: turbo_stream_updates(include_left_quick: true)
-        end
-      end
+      respond_item_success(place: place, notice: '未分類に追加しました', selected_item: @item, include_left_quick: true)
     else
       # エラーもトップに戻して出す（places_path だと別画面になるため）
       redirect_to root_path(place_id: place.id), alert: @item.errors.full_messages.to_sentence
@@ -82,16 +64,7 @@ class ItemsController < ApplicationController
     @item = @place.items.find(params[:id])
 
     if @item.destroy
-      respond_to do |format|
-        format.html do
-          redirect_to root_path(place_id: @place.id), notice: 'Itemを削除しました'
-        end
-
-        format.turbo_stream do
-          prepare_turbo_stream_state(place: @place, selected_item: nil)
-          render turbo_stream: turbo_stream_updates
-        end
-      end
+      respond_item_success(place: @place, notice: 'Itemを削除しました', selected_item: nil, include_left_quick: false)
     else
       respond_to do |format|
         format.html do
@@ -125,6 +98,27 @@ class ItemsController < ApplicationController
     @q = nil
     @items = @base_items.order(:name)
     @selected_item = selected_item
+  end
+
+  def respond_item_success(place:, notice:, selected_item:, include_left_quick:)
+    respond_to do |format|
+      format.html do
+        if selected_item.present?
+          redirect_to root_path(place_id: place.id, item_id: selected_item.id), notice: notice
+        else
+          redirect_to root_path(place_id: place.id), notice: notice
+        end
+      end
+
+      format.turbo_stream do
+        render_turbo_stream_updates(place: place, selected_item: selected_item, include_left_quick: include_left_quick)
+      end
+    end
+  end
+
+  def render_turbo_stream_updates(place:, selected_item:, include_left_quick:)
+    prepare_turbo_stream_state(place: place, selected_item: selected_item)
+    render turbo_stream: turbo_stream_updates(include_left_quick: include_left_quick)
   end
 
   def turbo_stream_updates(include_left_quick: false)
