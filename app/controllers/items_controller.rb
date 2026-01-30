@@ -66,15 +66,7 @@ class ItemsController < ApplicationController
     if @item.destroy
       respond_item_success(place: @place, notice: 'Itemを削除しました', selected_item: nil, include_left_quick: false)
     else
-      respond_to do |format|
-        format.html do
-          redirect_to root_path(place_id: @place.id), alert: @item.errors.full_messages.to_sentence
-        end
-
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("flash", partial: 'shared/flash', locals: { alert: @item.errors.full_messages.to_sentence })
-        end
-      end
+      respond_item_failure(place: @place, alert: @item.errors.full_messages.to_sentence)
     end
   end
 
@@ -103,11 +95,7 @@ class ItemsController < ApplicationController
   def respond_item_success(place:, notice:, selected_item:, include_left_quick:)
     respond_to do |format|
       format.html do
-        if selected_item.present?
-          redirect_to root_path(place_id: place.id, item_id: selected_item.id), notice: notice
-        else
-          redirect_to root_path(place_id: place.id), notice: notice
-        end
+        redirect_to item_success_path(place: place, selected_item: selected_item), notice: notice
       end
 
       format.turbo_stream do
@@ -119,6 +107,26 @@ class ItemsController < ApplicationController
   def render_turbo_stream_updates(place:, selected_item:, include_left_quick:)
     prepare_turbo_stream_state(place: place, selected_item: selected_item)
     render turbo_stream: turbo_stream_updates(include_left_quick: include_left_quick)
+  end
+
+  def respond_item_failure(place:, alert:)
+    respond_to do |format|
+      format.html do
+        redirect_to root_path(place_id: place.id), alert: alert
+      end
+
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("flash", partial: 'shared/flash', locals: { alert: alert })
+      end
+    end
+  end
+
+  def item_success_path(place:, selected_item:)
+    if selected_item.present?
+      root_path(place_id: place.id, item_id: selected_item.id)
+    else
+      root_path(place_id: place.id)
+    end
   end
 
   def turbo_stream_updates(include_left_quick: false)
