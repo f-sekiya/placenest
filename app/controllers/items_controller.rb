@@ -38,12 +38,7 @@ class ItemsController < ApplicationController
     if @item.save
       respond_item_success(place: place, notice: 'Itemを追加しました', selected_item: @item, include_left_quick: true)
     else
-      if params[:place_id].blank?
-        set_places_for_select
-      else
-        @place = place
-      end
-      render :new, status: :unprocessable_entity
+      respond_item_create_failure(place: place)
     end
   end
 
@@ -119,6 +114,16 @@ class ItemsController < ApplicationController
         render turbo_stream: turbo_stream.replace("flash", partial: 'shared/flash', locals: { alert: alert })
       end
     end
+  end
+
+  def respond_item_create_failure(place:)
+    if params[:place_id].blank?
+      set_places_for_select
+    else
+      @place = place
+    end
+
+    render :new, status: :unprocessable_entity
   end
 
   def item_success_path(place:, selected_item:)

@@ -4,7 +4,7 @@
     <div class="place-tree__row">
       <%= link_to place.name,
           root_path(place_id: place.id),
-          data: { turbo_frame: "middle_pane" },
+          data: { turbo_frame: "middle_pane", turbo_stream: true },
           class: "place-tree__link" %>
       
 
