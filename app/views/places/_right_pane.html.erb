@@ -1,6 +1,15 @@
+<div class="right-head">
+  <h3 class="right-head__title">プレビュー</h3>
+  <% if current_place.present? %>
+    <div class="right-head__context">
+      <span class="context-label">選択中Place</span>
+      <span class="context-place"><%= current_place.name %></span>
+    </div>
+  <% end %>
+</div>
+
 <% if selected_item.present? %>
   <%= render "places/item_preview", place: current_place, item: selected_item %>
 <% else %>
-  <h3>プレビュー</h3>
   <p>中央の一覧からItemを選択してください。</p>
 <% end %>

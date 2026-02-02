@@ -109,6 +109,11 @@ class PlacesController < ApplicationController
               turbo_stream.update(
                 'middle_pane',
                 partial: 'places/middle_pane'
+              ),
+              turbo_stream.update(
+                'right_pane',
+                partial: 'places/right_pane',
+                locals: { current_place: @current_place, selected_item: @selected_item }
               )
             ]
 
