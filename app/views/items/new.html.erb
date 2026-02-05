@@ -2,10 +2,11 @@
   <div class="quick-form">
     <h1 class="middle-head__title">Item 新規作成</h1>
 
-    <% if @place.present? %>
-      <p class="context-place">場所: <strong><%= @place.name %></strong></p>
+    <% item_place = @item.place %>
+    <% if item_place.present? %>
+      <p class="context-place">場所: <strong><%= item_place.name %></strong></p>
 
-      <%= form_with model: [@place, @item], class: "place-add__body" do |f| %>
+      <%= form_with model: [item_place, @item], class: "place-add__body" do |f| %>
         <% if @item.errors.any? %>
           <div class="place-add__error" role="alert">
             <p><strong><%= pluralize(@item.errors.count, "error") %> が発生しました:</strong></p>
