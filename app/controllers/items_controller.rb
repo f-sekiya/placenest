@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_place_from_nested, only: [:new, :create, :destroy], if: -> { params[:place_id].present? }
+  before_action :set_place_from_nested, only: [:create, :destroy], if: -> { params[:place_id].present? }
 
   before_action :set_item, only: [:edit, :update]
   before_action :set_places_for_select, only: [:edit]
@@ -8,12 +8,9 @@ class ItemsController < ApplicationController
   def new
     @item = current_user.items.new
 
-    if @place.present?
-      @item.place = @place
-    else
-      set_places_for_select
-      @item.place = current_user.unclassified_place
-    end
+    place = resolve_place_for_new
+    @item.place = place
+    set_places_for_select unless params[:place_id].present?
   end
 
   def edit
@@ -170,6 +167,14 @@ class ItemsController < ApplicationController
       @place
     elsif item_params[:place_id].present?
       current_user.places.find(item_params[:place_id])
+    else
+      current_user.unclassified_place
+    end
+  end
+
+  def resolve_place_for_new
+    if params[:place_id].present?
+      current_user.places.find(params[:place_id])
     else
       current_user.unclassified_place
     end
