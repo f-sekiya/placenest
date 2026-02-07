@@ -47,8 +47,7 @@ class ItemsController < ApplicationController
     if @item.save
       respond_item_success(place: place, notice: '未分類に追加しました', selected_item: @item, include_left_quick: true)
     else
-      # エラーもトップに戻して出す（places_path だと別画面になるため）
-      redirect_to root_path(place_id: place.id), alert: @item.errors.full_messages.to_sentence
+      respond_item_failure(place: place, alert: @item.errors.full_messages.to_sentence)
     end
   end
 
