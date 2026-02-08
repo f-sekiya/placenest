@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_place_from_nested, only: [:create, :destroy], if: -> { params[:place_id].present? }
+  before_action :set_place_from_nested, only: [:destroy], if: -> { params[:place_id].present? }
 
   before_action :set_item, only: [:edit, :update]
   before_action :set_places_for_select, only: [:edit]
@@ -8,7 +8,7 @@ class ItemsController < ApplicationController
   def new
     @item = current_user.items.new
 
-    place = resolve_place_for_new
+    place = resolve_place_for_item
     @item.place = place
     set_places_for_select unless params[:place_id].present?
   end
@@ -27,7 +27,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    place = resolve_place_for_create!
+    place = resolve_place_for_item(fallback_place_id: item_params[:place_id])
 
     @item = current_user.items.new(item_params.except(:place_id))
     @item.place = place
@@ -161,22 +161,11 @@ class ItemsController < ApplicationController
     streams
   end
 
-  def resolve_place_for_create!
-    if params[:place_id].present?
-      @place
-    elsif item_params[:place_id].present?
-      current_user.places.find(item_params[:place_id])
-    else
-      current_user.unclassified_place
-    end
-  end
+  def resolve_place_for_item(fallback_place_id: nil)
+    place_id = params[:place_id].presence || fallback_place_id.presence
+    return current_user.places.find(place_id) if place_id.present?
 
-  def resolve_place_for_new
-    if params[:place_id].present?
-      current_user.places.find(params[:place_id])
-    else
-      current_user.unclassified_place
-    end
+    current_user.unclassified_place
   end
 
   def item_params
