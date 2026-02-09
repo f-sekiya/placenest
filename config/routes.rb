@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   get 'profile', to: 'users#show', as: :profile
 
   resources :places, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    collection do
+      get :new_button
+    end
+
     resources :items, only: [:new, :create, :destroy, :edit, :update]
   end
 

@@ -9,12 +9,12 @@
   <div class="left-head">
     <h2 class="left-head__title">Place</h2>
 
-    <div id="place_new">
+    <%= turbo_frame_tag "place_new" do %>
       <%= render "places/place_new",
                  place: @new_place,
                  parent_id: @current_place&.id,
                  open: false %>
-    </div>
+    <% end %>
   </div>
 
   <div class="left-tree">

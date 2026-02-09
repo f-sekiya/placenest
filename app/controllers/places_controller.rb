@@ -173,10 +173,21 @@ class PlacesController < ApplicationController
   def edit
     @parent = current_user.places.find_by(id: @place.parent_id)
 
+    if turbo_frame_request?
+      render partial: "places/inline_form",
+             locals: { place: @place, parent_id: @parent&.id }
+    else
+      render :edit
+    end
+  end
+
+  def new_button
+    @parent = current_user.places.find_by(id: params[:parent_id])
+
     return unless turbo_frame_request?
 
-    render partial: "places/inline_form",
-           locals: { place: @place, parent_id: @parent&.id }
+    render partial: "places/new_button",
+           locals: { parent_id: @parent&.id }
   end
 
   def create
