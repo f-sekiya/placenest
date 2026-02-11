@@ -1,22 +1,5 @@
-<%= form_with model: place, local: true, class: "place-inline-form" do |f| %>
-  <%= f.hidden_field :parent_id, value: parent_id %>
-  <%= hidden_field_tag :return_place_id, parent_id %>
-
-  <div class="place-inline-form__row">
-    <%= f.text_field :name, placeholder: "Place名（必須）", autofocus: true, class: "input" %>
-    <%= f.submit(place.persisted? ? "更新" : "追加", class: "btn btn--primary") %>
-
-    <%= link_to "キャンセル",
-                new_button_places_path(parent_id: parent_id),
-                data: { turbo_frame: "place_new" },
-                class: "btn btn--ghost" %>
-  </div>
-
-  <% if place.errors.any? %>
-    <p class="place-inline-form__error"><%= place.errors.full_messages.to_sentence %></p>
-  <% end %>
-  
-  <div class="place-inline-form__row">
-    <%= f.text_area :description, placeholder: "メモ（任意）", rows: 2, class: "input" %>
-  </div>
-<% end %>
+<%= render "places/form",
+           place: place,
+           parent_id: parent_id,
+           form_class: "place-inline-form",
+           variant: :inline %>
