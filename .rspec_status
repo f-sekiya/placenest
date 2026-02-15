@@ -1,6 +1,29 @@
-example_id                      | status | run_time        |
-------------------------------- | ------ | --------------- |
-./spec/models/item_spec.rb[1:1] | passed | 0.07568 seconds |
-./spec/models/item_spec.rb[1:2] | passed | 0.01124 seconds |
-./spec/models/item_spec.rb[1:3] | passed | 0.00847 seconds |
-./spec/models/item_spec.rb[1:4] | passed | 0.00052 seconds |
+example_id                                          | status  | run_time        |
+--------------------------------------------------- | ------- | --------------- |
+./spec/controllers/items_controller_spec.rb[1:1:1]  | failed  | 0.06967 seconds |
+./spec/controllers/items_controller_spec.rb[1:1:2]  | failed  | 0.00919 seconds |
+./spec/controllers/items_controller_spec.rb[1:2:1]  | failed  | 0.01606 seconds |
+./spec/controllers/items_controller_spec.rb[1:2:2]  | failed  | 0.01211 seconds |
+./spec/controllers/items_controller_spec.rb[1:3:1]  | failed  | 0.00857 seconds |
+./spec/controllers/items_controller_spec.rb[1:4:1]  | failed  | 0.02116 seconds |
+./spec/controllers/items_controller_spec.rb[1:4:2]  | failed  | 0.01797 seconds |
+./spec/controllers/items_controller_spec.rb[1:5:1]  | failed  | 0.01545 seconds |
+./spec/controllers/places_controller_spec.rb[1:1:1] | failed  | 0.01891 seconds |
+./spec/helpers/items_helper_spec.rb[1:1]            | pending | 0.00002 seconds |
+./spec/helpers/places_helper_spec.rb[1:1]           | pending | 0 seconds       |
+./spec/models/item_spec.rb[1:1]                     | passed  | 0.01085 seconds |
+./spec/models/item_spec.rb[1:2]                     | passed  | 0.02077 seconds |
+./spec/models/item_spec.rb[1:3]                     | passed  | 0.01088 seconds |
+./spec/models/item_spec.rb[1:4]                     | passed  | 0.00093 seconds |
+./spec/models/place_spec.rb[1:1:1]                  | passed  | 0.01847 seconds |
+./spec/models/place_spec.rb[1:1:2]                  | passed  | 0.01487 seconds |
+./spec/models/user_spec.rb[1:1]                     | passed  | 0.01012 seconds |
+./spec/models/user_spec.rb[1:2:1]                   | passed  | 0.02382 seconds |
+./spec/requests/items_spec.rb[1:1:1]                | failed  | 0.00593 seconds |
+./spec/requests/places_spec.rb[1:1:1]               | failed  | 0.00262 seconds |
+./spec/requests/places_spec.rb[1:2:1]               | failed  | 0.00221 seconds |
+./spec/requests/places_spec.rb[1:3:1]               | failed  | 0.00189 seconds |
+./spec/views/items/new.html.erb_spec.rb[1:1]        | pending | 0.00003 seconds |
+./spec/views/places/index.html.erb_spec.rb[1:1]     | pending | 0 seconds       |
+./spec/views/places/new.html.erb_spec.rb[1:1]       | pending | 0 seconds       |
+./spec/views/places/show.html.erb_spec.rb[1:1]      | pending | 0.00001 seconds |
