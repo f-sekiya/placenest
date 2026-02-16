@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "right_pane" do %>
+  <%= render partial: "places/right_pane",
+             locals: { current_place: current_place, selected_item: selected_item } %>
+<% end %>

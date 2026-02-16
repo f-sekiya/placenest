@@ -1,15 +1,20 @@
-<div class="right-head">
-  <h3 class="right-head__title">プレビュー</h3>
-  <% if current_place.present? %>
-    <div class="right-head__context">
-      <span class="context-label">選択中Place</span>
-      <span class="context-place"><%= current_place.name %></span>
-    </div>
+<div
+  data-controller="middle-selection-sync"
+  data-middle-selection-sync-selected-item-id-value="<%= selected_item&.id %>"
+>
+  <div class="right-head">
+    <h3 class="right-head__title">プレビュー</h3>
+    <% if current_place.present? %>
+      <div class="right-head__context">
+        <span class="context-label">選択中Place</span>
+        <span class="context-place"><%= current_place.name %></span>
+      </div>
+    <% end %>
+  </div>
+
+  <% if selected_item.present? %>
+    <%= render "places/item_preview", place: current_place, item: selected_item %>
+  <% else %>
+    <p>中央の一覧からItemを選択してください。</p>
   <% end %>
 </div>
-
-<% if selected_item.present? %>
-  <%= render "places/item_preview", place: current_place, item: selected_item %>
-<% else %>
-  <p>中央の一覧からItemを選択してください。</p>
-<% end %>
