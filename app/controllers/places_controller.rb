@@ -10,115 +10,12 @@ class PlacesController < ApplicationController
     prepare_items
     find_selected_item
 
-    respond_to do |format|
-      format.html do
-        # If this is a Turbo frame navigation (or explicit item selection),
-        # prefer turbo-stream when the client asks for it. If the client
-        # requested plain HTML (common with some Accept headers), return a
-        # right_pane-wrapped <turbo-frame> HTML fragment.
-        if turbo_frame_request? || params[:item_id].present?
-          accept = request.headers['Accept'].to_s
-
-          if accept.include?('text/vnd.turbo-stream.html')
-            render turbo_stream: [
-              turbo_stream.update(
-                'place_tree',
-                partial: 'places/place_tree',
-                locals: { place_tree: @place_tree, current_place: @current_place }
-              ),
-              turbo_stream.update(
-                'middle_pane',
-                partial: 'places/middle_pane'
-              ),
-              turbo_stream.update(
-                'right_pane',
-                partial: 'places/right_pane',
-                locals: { current_place: @current_place, selected_item: @selected_item }
-              )
-            ]
-          else
-            frame = request.headers['Turbo-Frame'].to_s
-
-            case frame
-            when 'middle_pane'
-              middle_html = render_to_string(partial: 'places/middle_pane')
-              render html: "<turbo-frame id=\"middle_pane\">#{middle_html}</turbo-frame>".html_safe
-            when 'right_pane'
-              render partial: 'places/right_pane_frame',
-                     locals: { current_place: @current_place, selected_item: @selected_item }
-            else
-              render :index
-            end
-          end
-        else
-          render :index
-        end
-      end
-
-      format.turbo_stream do
-        # Handle turbo requests robustly: if item_id param present, update both middle and right panes
-        if params[:item_id].present?
-          render turbo_stream: [
-            turbo_stream.update(
-              'place_tree',
-              partial: 'places/place_tree',
-              locals: { place_tree: @place_tree, current_place: @current_place }
-            ),
-            turbo_stream.update(
-              'middle_pane',
-              partial: 'places/middle_pane'
-            ),
-            turbo_stream.update(
-              'right_pane',
-              partial: 'places/right_pane',
-              locals: { current_place: @current_place, selected_item: @selected_item }
-            )
-          ]
-
-        elsif turbo_frame_request?
-          frame = request.headers['Turbo-Frame']
-
-          case frame
-          when 'middle_pane'
-            render turbo_stream: [
-              turbo_stream.update(
-                'place_tree',
-                partial: 'places/place_tree',
-                locals: { place_tree: @place_tree, current_place: @current_place }
-              ),
-              turbo_stream.update(
-                'middle_pane',
-                partial: 'places/middle_pane'
-              ),
-              turbo_stream.update(
-                'right_pane',
-                partial: 'places/right_pane',
-                locals: { current_place: @current_place, selected_item: @selected_item }
-              )
-            ]
-
-          when 'right_pane'
-            render turbo_stream: [
-              turbo_stream.update(
-                'middle_pane',
-                partial: 'places/middle_pane'
-              ),
-              turbo_stream.update(
-                'right_pane',
-                partial: 'places/right_pane',
-                locals: { current_place: @current_place, selected_item: @selected_item }
-              )
-            ]
-
-          else
-            head :ok
-          end
-
-        else
-          head :ok
-        end
-      end
-    end
+    Places::IndexResponder.new(
+      controller: self,
+      place_tree: @place_tree,
+      current_place: @current_place,
+      selected_item: @selected_item
+    ).call
   end
 
   def show
