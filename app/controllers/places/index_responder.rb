@@ -23,7 +23,7 @@ module Places
       end
 
       if accept_header.include?("text/vnd.turbo-stream.html")
-        @controller.render turbo_stream: full_pane_updates
+        @controller.render turbo_stream: pane_updates_full
         return
       end
 
@@ -41,7 +41,7 @@ module Places
 
     def respond_turbo_stream
       if params[:item_id].present?
-        @controller.render turbo_stream: full_pane_updates
+        @controller.render turbo_stream: pane_updates_full
         return
       end
 
@@ -52,45 +52,29 @@ module Places
 
       case turbo_frame
       when "middle_pane"
-        @controller.render turbo_stream: full_pane_updates
+        @controller.render turbo_stream: pane_updates_full
       when "right_pane"
-        @controller.render turbo_stream: right_pane_updates
+        @controller.render turbo_stream: pane_updates_middle_and_right
       else
         @controller.head :ok
       end
     end
 
-    def full_pane_updates
-      [
-        @controller.turbo_stream.update(
-          "place_tree",
-          partial: "places/place_tree",
-          locals: { place_tree: @place_tree, current_place: @current_place }
-        ),
-        @controller.turbo_stream.update(
-          "middle_pane",
-          partial: "places/middle_pane"
-        ),
-        @controller.turbo_stream.update(
-          "right_pane",
-          partial: "places/right_pane",
-          locals: { current_place: @current_place, selected_item: @selected_item }
-        )
-      ]
+    def pane_updates_full
+      Places::PaneUpdates.full(
+        controller: @controller,
+        place_tree: @place_tree,
+        current_place: @current_place,
+        selected_item: @selected_item
+      )
     end
 
-    def right_pane_updates
-      [
-        @controller.turbo_stream.update(
-          "middle_pane",
-          partial: "places/middle_pane"
-        ),
-        @controller.turbo_stream.update(
-          "right_pane",
-          partial: "places/right_pane",
-          locals: { current_place: @current_place, selected_item: @selected_item }
-        )
-      ]
+    def pane_updates_middle_and_right
+      Places::PaneUpdates.middle_and_right(
+        controller: @controller,
+        current_place: @current_place,
+        selected_item: @selected_item
+      )
     end
 
     def accept_header

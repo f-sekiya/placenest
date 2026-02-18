@@ -97,7 +97,13 @@ class ItemsController < ApplicationController
 
   def render_turbo_stream_updates(place:, selected_item:, include_left_quick:)
     prepare_turbo_stream_state(place: place, selected_item: selected_item)
-    render turbo_stream: turbo_stream_updates(include_left_quick: include_left_quick)
+    render turbo_stream: Places::PaneUpdates.full(
+      controller: self,
+      place_tree: current_user.places.arrange(order: :name),
+      current_place: @current_place,
+      selected_item: @selected_item,
+      include_left_quick: include_left_quick
+    )
   end
 
   def respond_item_failure(place:, alert:)
@@ -128,37 +134,6 @@ class ItemsController < ApplicationController
     else
       root_path(place_id: place.id)
     end
-  end
-
-  def turbo_stream_updates(include_left_quick: false)
-    streams = [
-      turbo_stream.update(
-        'place_tree',
-        partial: 'places/place_tree',
-        locals: { place_tree: current_user.places.arrange(order: :name), current_place: @current_place }
-      ),
-      turbo_stream.update(
-        'middle_pane',
-        partial: 'places/middle_pane'
-      ),
-      turbo_stream.update(
-        'right_pane',
-        partial: 'places/right_pane',
-        locals: { current_place: @current_place, selected_item: @selected_item }
-      )
-    ]
-
-    if include_left_quick
-      streams.insert(
-        1,
-        turbo_stream.update(
-          'left_quick',
-          partial: 'places/left_quick'
-        )
-      )
-    end
-
-    streams
   end
 
   def resolve_place_for_item(fallback_place_id: nil)
