@@ -137,10 +137,14 @@ class ItemsController < ApplicationController
   end
 
   def resolve_place_for_item(fallback_place_id: nil)
-    place_id = params[:place_id].presence || fallback_place_id.presence
-    return current_user.places.find(place_id) if place_id.present?
+    current_place_resolver.for_item(
+      params_place_id: params[:place_id],
+      fallback_place_id: fallback_place_id
+    )
+  end
 
-    current_user.unclassified_place
+  def current_place_resolver
+    @current_place_resolver ||= Places::CurrentPlaceResolver.new(user: current_user)
   end
 
   def item_params

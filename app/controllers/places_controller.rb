@@ -156,12 +156,7 @@ class PlacesController < ApplicationController
   end
 
   def set_current_place
-    @current_place = if params[:place_id].present?
-                       current_user.places.find_by(id: params[:place_id])
-                     else
-                       current_user.unclassified_place
-                     end
-    @current_place ||= current_user.places.first
+    @current_place = current_place_resolver.for_index(place_id: params[:place_id])
   end
 
   def prepare_new_place
@@ -185,9 +180,11 @@ class PlacesController < ApplicationController
   end
 
   def compute_return_place(deleted_id, return_place_id)
-    return_place = resolve_current_place_from(return_place_id)
-    return_place = (@place.parent || current_user.unclassified_place || current_user.places.where.not(id: deleted_id).first) if return_place&.id == deleted_id
-    return_place
+    current_place_resolver.for_return(
+      return_place_id: return_place_id,
+      deleted_id: deleted_id,
+      fallback_parent: @place.parent
+    )
   end
 
   def respond_place_create_success(current_place)
@@ -236,8 +233,10 @@ class PlacesController < ApplicationController
 
   # return_place_id が無効/空でも必ず落ち着く場所を返す
   def resolve_current_place_from(id)
-    current_user.places.find_by(id: id) ||
-      current_user.unclassified_place ||
-      current_user.places.first
+    current_place_resolver.for_index(place_id: id)
+  end
+
+  def current_place_resolver
+    @current_place_resolver ||= Places::CurrentPlaceResolver.new(user: current_user)
   end
 end
