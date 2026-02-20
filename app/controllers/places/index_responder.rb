@@ -29,8 +29,7 @@ module Places
 
       case turbo_frame
       when "middle_pane"
-        middle_html = @controller.render_to_string(partial: "places/middle_pane")
-        @controller.render html: "<turbo-frame id=\"middle_pane\">#{middle_html}</turbo-frame>".html_safe
+        @controller.render partial: "places/middle_pane_frame"
       when "right_pane"
         @controller.render partial: "places/right_pane_frame",
                            locals: { current_place: @current_place, selected_item: @selected_item }
